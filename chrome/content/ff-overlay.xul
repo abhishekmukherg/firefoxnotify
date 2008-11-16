@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE overlay SYSTEM "chrome://dbusnotify/locale/overlay.dtd">
+<overlay id="dbusnotify-overlay" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+  <script src="overlay.js"/>
+  <script src="ff-overlay.js"/>
+
+  <stringbundleset id="stringbundleset">
+    <stringbundle id="dbusnotify-strings" src="chrome://dbusnotify/locale/overlay.properties"/>
+  </stringbundleset>
+
+</overlay>
