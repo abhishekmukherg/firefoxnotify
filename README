@@ -1,0 +1,9 @@
+A quick extension based on mumbles project's FirefoxDbus to send notifications
+on the galago notifications interface.
+
+Requirements:
+  * DBus
+Optional:
+  * xdg-open (from xdg-utils
+
+to build, run `zip -r notify_dbus.xpi .` from this directory
