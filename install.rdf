@@ -13,6 +13,6 @@
         <em:maxVersion>3.0.*</em:maxVersion>
       </Description>
     </em:targetApplication>
-    <em:targetPlatform>Linux</targetPlatform>
+    <em:targetPlatform>Linux</em:targetPlatform>
   </Description>
 </RDF>
