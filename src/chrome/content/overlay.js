@@ -1,15 +1,15 @@
 
 
-var dbusnotify = {
+var download_complete_notify = {
   onLoad: function() {
     // initialization code
     this.initialized = true;
-    this.strings = document.getElementById("dbusnotify-strings");
+    this.strings = document.getElementById("download_complete_notify-strings");
     
     this.dlMgr = Components.classes["@mozilla.org/download-manager;1"]
                            .getService(Components.interfaces.nsIDownloadManager);
               
-    this.dlMgr.addListener(dbusnotify);
+    this.dlMgr.addListener(download_complete_notify);
   },
   
   notify: function(aDownload) {
@@ -22,9 +22,9 @@ var dbusnotify = {
         try {
             path=(new DIR_SERVICE()).get("ProfD", Components.interfaces.nsIFile).path;
         } catch (e) {
-            alert("error finding dbusnotify.py: "+error);
+            alert("error finding download_complete_notify.py: "+error);
         }
-        path = path + "/extensions/firefoxnotify@abhishek.mukherjee/chrome/content/dbusnotify.py";
+        path = path + "/extensions/firefoxnotify@abhishek.mukherjee/chrome/content/download_complete_notify.py";
 
         exec.initWithPath(path);
 
@@ -37,7 +37,7 @@ var dbusnotify = {
 
             var exitvalue = process.run(false, args, args.length);
         } else {
-            alert("Error running dbusnotify.py");
+            alert("Error running download_complete_notify.py");
         }
     } catch (e) {
         alert("DBus Notification Failed"+e);
@@ -61,4 +61,4 @@ var dbusnotify = {
 
 };
 
-window.addEventListener("load", function(e) { dbusnotify.onLoad(e); }, false);
+window.addEventListener("load", function(e) { download_complete_notify.onLoad(e); }, false);
