@@ -30,7 +30,7 @@ if SESSION_BUS == None:
 
 class GalagoNotification(object):
     """
-    A message from Firefox to a Galago compliant notification library.
+    A message to a Galago compliant notification library.
     """
     def __init__(self, summary,
             body=None,
