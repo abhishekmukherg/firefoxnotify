@@ -6,4 +6,4 @@ Requirements:
 Optional:
   * xdg-open (from xdg-utils
 
-to build, run `zip -r notify_dbus.xpi .` from this directory
+to build, run `make` from this directory
