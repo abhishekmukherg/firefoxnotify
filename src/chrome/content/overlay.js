@@ -14,19 +14,20 @@ var download_complete_notify = {
   
   notify: function(aDownload) {
 
-    try {
         var exec = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsILocalFile);
 
-        var path = '';
-        const DIR_SERVICE = new Components.Constructor("@mozilla.org/file/directory_service;1","nsIProperties");
+	const MY_ID = 'firefoxnotify@abhishek.mukherjee';
+	const DIR_SERVICE = Components.classes["@mozilla.org/extensions/manager;1"].
+		getService(Components.interfaces.nsIExtensionManager);
+    try {
         try {
-            path=(new DIR_SERVICE()).get("ProfD", Components.interfaces.nsIFile).path;
+            var file = DIR_SERVICE.getInstallLocation(MY_ID).
+		    getItemFile(MY_ID, "chrome/content/download_complete_notify.py");
         } catch (e) {
             alert("error finding download_complete_notify.py: "+error);
         }
-        path = path + "/extensions/firefoxnotify@abhishek.mukherjee/chrome/content/download_complete_notify.py";
 
-        exec.initWithPath(path);
+        exec.initWithPath(file.path);
 
         if (exec.exists()) {
             var process = Components.classes["@mozilla.org/process/util;1"].createInstance(Components.interfaces.nsIProcess);
@@ -40,7 +41,7 @@ var download_complete_notify = {
             alert("Error running download_complete_notify.py");
         }
     } catch (e) {
-        alert("DBus Notification Failed"+e);
+        alert("FirefoxNotify Failed"+e);
         return;
     }
   },
