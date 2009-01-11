@@ -14,6 +14,9 @@ import dbus
 import logging
 import gobject
 
+from threading import Timer
+
+import dbus.glib
 from  dbus.mainloop.glib import DBusGMainLoop
 DBusGMainLoop(set_as_default=True)
 
@@ -46,7 +49,7 @@ class GalagoNotification(object):
         you  actually want to send the message.
         summary
         body    : pretty self explanatory
-        action  : A dictionary of {string, callable} where string is the text
+        actions  : A dictionary of {string, callable} where string is the text
                   that should be displayed on the button and callable is a
                   function that takes no arguments
         hints   : directly passed to the notification server, see
@@ -71,6 +74,7 @@ class GalagoNotification(object):
         self.closed_action = closed_action
         self._notification_id = None
         self._loop = None
+        self._thread = None
     def send(self):
         """ Sends notification to libnotify """
         notif = SESSION_BUS.get_object(NOTIFICATIONS_OBJECT, NOTIFICATIONS_PATH)
@@ -107,6 +111,7 @@ class GalagoNotification(object):
         if self.closed_action:
             assert reason > 0
             self.closed_action(CLOSED_REASON[reason])
+            self._notification_id = None
 
     def _action_invoked(self, notif_id, key):
         """
@@ -125,7 +130,12 @@ class GalagoNotification(object):
         closed_notification
         """
         if self._loop == None:
+            gobject.threads_init()
+            dbus.glib.init_threads()
             self._loop = gobject.MainLoop()
+        t = Timer(60.0, self._notification_closed_handler,
+                            args=(self._notification_id,
+                                CLOSED_REASON.index('undefined')))
         self._loop.run()
 
 def main():
@@ -133,13 +143,17 @@ def main():
     as the summary and argv[2] as the body"""
     import sys
     if len(sys.argv) != 3:
-        logging.warning("%s called with invalid number of arguments" %
+        logging.critical("%s called with invalid number of arguments" %
                                                         sys.argv[0])
-        logging.warning("Arguments were: %s" % sys.argv)
+        logging.critical("Arguments were: %s" % sys.argv)
+        print >> sys.stderr, "Usage: %s <summary> <body>" % sys.argv[0]
         sys.exit(1)
 
     # open notification
-    notif = GalagoNotification(sys.argv[1], sys.argv[2])
+    notif = GalagoNotification(
+            sys.argv[1],
+            sys.argv[2],
+            actions={'Baz': lambda: sys.stdout.write("woo")})
     notif.send()
 
 if __name__ == "__main__":
