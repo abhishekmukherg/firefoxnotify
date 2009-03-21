@@ -75,15 +75,19 @@ class GalagoNotification(object):
         self._notification_id = None
         self._loop = None
         self._thread = None
+
     def send(self):
         """ Sends notification to libnotify """
         notif = SESSION_BUS.get_object(NOTIFICATIONS_OBJECT, NOTIFICATIONS_PATH)
         # Get the actions into list format
-        actions = [ x for x in enumerate(self.actions_order) ]
-        actions_flat = []
-        for act in actions:
-            actions_flat.append(str(act[0]))
-            actions_flat.append(act[1])
+        if 'actions' in notif.GetCapabilities():
+            actions = [ x for x in enumerate(self.actions_order) ]
+            actions_flat = []
+            for act in actions:
+                actions_flat.append(str(act[0]))
+                actions_flat.append(act[1])
+        else:
+            actions = []
         notif_id = self._notification_id or 0
         self._notification_id = notif.Notify(self.appname,
                 notif_id, self.appicon, self.summary,

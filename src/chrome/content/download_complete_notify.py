@@ -43,8 +43,6 @@ def open_notification(title, location):
                 )
     notif.send()
 
-
-
 def main():
     """Opens a notification in firefox
 
