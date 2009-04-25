@@ -9,6 +9,7 @@ import pynotify
 import pygtk
 pygtk.require('2.0')
 import gtk
+import logging
 from subprocess import Popen
 
 
@@ -16,6 +17,10 @@ OPEN_COMMAND = "xdg-open"
 SUMMARY = "Firefox Download Complete"
 BODY = "%s has been saved to %s"
 HINTS = {"category": "transfer.complete"}
+
+
+logging.basicConfig(level=logging.DEBUG)
+LOG = logging.getLogger(__name__)
 
 
 class GalagoNotRunningException(Exception):
@@ -60,37 +65,49 @@ class FirefoxNotification(object):
         Adds actions open and opendir if available
         
         """
-        notif = pynotify.Notification(SUMMARY,
+        self.notif = pynotify.Notification(SUMMARY,
                                       BODY % (self.title, self.location),
                                       APPICON,
                                       )
+        self.notif.connect('closed', self._cleanup)
+
         caps = pynotify.get_server_caps()
         if caps is None:
             raise GalagoNotRunningException
-        if 'actions' in caps and caps['actions']:
-            notif.add_action("open", "Open", self.open_file)
-            notif.add_action("opendir", "Open Directory", self.open_directory)
+        if 'actions' in caps:
+            self.notif.add_action("open", "Open", self.open_file)
+            self.notif.add_action("opendir", "Open Directory", self.open_directory)
 
-        if not notif.show():
+        LOG.info("Displaying notification")
+        if not self.notif.show():
             raise GalagoNotRunningException("Could not display notification")
-        if 'actions' in caps and caps['actions']:
+        if 'actions' in caps:
             gtk.main()
+
+    def _cleanup(self, notif=None, reason=None):
+        if (notif is None and reason is None) or notif == self.notif:
+            LOG.info("Closing")
+            gtk.main_quit()
 
     def open_file(self):
         """Opens the file for the file given in the global FILENAME"""
+        LOG.info(u"Opening file" + unicode(self.location))
         Popen([OPEN_COMMAND, self.location])
-        gtk.main_quit()
+        self._cleanup()
 
     def open_directory(self):
         """Opens the directory for the file given in the global FILENAME"""
-        Popen([OPEN_COMMAND, os.path.dirname(self.location)])
-        gtk.main_quit()
+        dir = os.path.dirname(self.location)
+        LOG.info(u"Opening dir" + unicode(dir))
+        Popen([OPEN_COMMAND, os.path.dirname(dir)])
+        self._cleanup()
 
 
 def main():
     """Opens a notification in firefox
 
     sys.argv[1] should be the title and sys.argv[2] should be the location
+
     """
     import sys
     if len(sys.argv) != 3:
