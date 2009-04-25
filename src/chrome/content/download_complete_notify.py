@@ -25,7 +25,7 @@ BODY = _("%s has been saved to %s")
 HINTS = {"category": "transfer.complete"}
 
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig()
 LOG = logging.getLogger(__name__)
 
 
