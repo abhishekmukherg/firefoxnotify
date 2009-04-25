@@ -127,7 +127,7 @@ def main(argv):
 
     """
     if len(argv) != 3:
-        print >> sys.stderr, "Invalid number of arguments called"
+        LOG.critical(_("Invalid number of arguments called"))
         return 1
     notify = FirefoxNotification(argv[1], argv[2])
     notify.show()
