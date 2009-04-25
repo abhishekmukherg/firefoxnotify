@@ -11,7 +11,7 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 import logging
-from subprocess import Popen
+from subprocess import Popen, call
 
 try:
     from gettext import gettext as _
@@ -82,7 +82,13 @@ class FirefoxNotification(object):
         caps = pynotify.get_server_caps()
         if caps is None:
             raise GalagoNotRunningException
-        if 'actions' in caps:
+        try:
+            call([OPEN_COMMAND, '--version'])
+        except:
+            xdg_exists = False
+        else:
+            xdg_exists = True
+        if 'actions' in caps and xdg_exists:
             self.notif.add_action("open",
                                 _("Open"),
                                 self.open_file)
