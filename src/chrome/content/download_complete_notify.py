@@ -85,21 +85,22 @@ class FirefoxNotification(object):
             gtk.main()
 
     def _cleanup(self, notif=None, reason=None):
-        if (notif is None and reason is None) or notif == self.notif:
-            LOG.info("Closing")
-            gtk.main_quit()
+        LOG.info("Closing")
+        gtk.main_quit()
 
-    def open_file(self):
-        """Opens the file for the file given in the global FILENAME"""
+    def open_file(self, notif=None, action_key=None):
+        """Opens the file for the file given in self.location"""
+        assert notif is None or notif == self.notif
         LOG.info(u"Opening file" + unicode(self.location))
         Popen([OPEN_COMMAND, self.location])
         self._cleanup()
 
-    def open_directory(self):
-        """Opens the directory for the file given in the global FILENAME"""
+    def open_directory(self, notif=None, action_key=None):
+        """Opens the directory for the file given in self.location"""
+        assert notif is None or notif == self.notif
         dir = os.path.dirname(self.location)
         LOG.info(u"Opening dir" + unicode(dir))
-        Popen([OPEN_COMMAND, os.path.dirname(dir)])
+        Popen([OPEN_COMMAND, dir])
         self._cleanup()
 
 
