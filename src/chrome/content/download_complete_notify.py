@@ -5,6 +5,7 @@ has completed
 """
 
 import os
+import sys
 import pynotify
 import pygtk
 pygtk.require('2.0')
@@ -12,10 +13,15 @@ import gtk
 import logging
 from subprocess import Popen
 
+try:
+    from gettext import gettext as _
+except ImportError:
+    _ = lambda x: unicode(x)
+
 
 OPEN_COMMAND = "xdg-open"
-SUMMARY = "Firefox Download Complete"
-BODY = "%s has been saved to %s"
+SUMMARY = _("Firefox Download Complete")
+BODY = _("%s has been saved to %s")
 HINTS = {"category": "transfer.complete"}
 
 
@@ -58,6 +64,7 @@ class FirefoxNotification(object):
         """Creates a Notification for Firefox"""
         self.title = title
         self.location = location
+        self.notif = None
 
     def show(self):
         """Displays a notification for firefox.
@@ -70,28 +77,37 @@ class FirefoxNotification(object):
                                       APPICON,
                                       )
         self.notif.connect('closed', self._cleanup)
+        self.notif.set_hint_string("category", "transfer.complete")
 
         caps = pynotify.get_server_caps()
         if caps is None:
             raise GalagoNotRunningException
         if 'actions' in caps:
-            self.notif.add_action("open", "Open", self.open_file)
-            self.notif.add_action("opendir", "Open Directory", self.open_directory)
+            self.notif.add_action("open",
+                                _("Open"),
+                                self.open_file)
+            self.notif.add_action("opendir",
+                                _("Open Directory"),
+                                self.open_directory)
 
-        LOG.info("Displaying notification")
+        LOG.info(_("Displaying notification"))
         if not self.notif.show():
-            raise GalagoNotRunningException("Could not display notification")
+            raise GalagoNotRunningException(_("Could not display notification"))
         if 'actions' in caps:
             gtk.main()
 
     def _cleanup(self, notif=None, reason=None):
-        LOG.info("Closing")
+        """
+        Clean up the notification
+        """
+        assert notif is None or notif == self.notif
+        LOG.info(_("Closing"))
         gtk.main_quit()
 
     def open_file(self, notif=None, action_key=None):
         """Opens the file for the file given in self.location"""
         assert notif is None or notif == self.notif
-        LOG.info(u"Opening file" + unicode(self.location))
+        LOG.info(_("Opening file %s") % unicode(self.location))
         Popen([OPEN_COMMAND, self.location])
         self._cleanup()
 
@@ -99,24 +115,24 @@ class FirefoxNotification(object):
         """Opens the directory for the file given in self.location"""
         assert notif is None or notif == self.notif
         dir = os.path.dirname(self.location)
-        LOG.info(u"Opening dir" + unicode(dir))
+        LOG.info(_("Opening dir %s") % unicode(dir))
         Popen([OPEN_COMMAND, dir])
         self._cleanup()
 
 
-def main():
+def main(argv):
     """Opens a notification in firefox
 
     sys.argv[1] should be the title and sys.argv[2] should be the location
 
     """
-    import sys
-    if len(sys.argv) != 3:
+    if len(argv) != 3:
         print >> sys.stderr, "Invalid number of arguments called"
-        sys.exit(1)
-    notify = FirefoxNotification(sys.argv[1], sys.argv[2])
+        return 1
+    notify = FirefoxNotification(argv[1], argv[2])
     notify.show()
+    return 0
 
 
 if __name__ == '__main__':
-    main()
+    sys.exit(main(sys.argv))
