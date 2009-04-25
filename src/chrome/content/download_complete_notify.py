@@ -4,44 +4,88 @@ Opens a file in a galago aware environment to inform the user that a download
 has completed
 """
 
-import dbusnotify
-from os.path import dirname
-from subprocess import Popen, call
+import os
+import pynotify
+import pygtk
+pygtk.require('2.0')
+import gtk
+from subprocess import Popen
 
-FILENAME = ""
+
 OPEN_COMMAND = "xdg-open"
-
-def open_file():
-    """Opens the file for the file given in the global FILENAME"""
-    Popen([OPEN_COMMAND, FILENAME])
-def open_dir():
-    """Opens the directory for the file given in the global FILENAME"""
-    Popen([OPEN_COMMAND, dirname(FILENAME)])
-
-APPNAME = "Firefox"
-APPICON = "firefox"
-        
 SUMMARY = "Firefox Download Complete"
-BODY = "%s has completed downloading"
-ACTIONS = {"Open": open_file, "Open Directory": open_dir}
+BODY = "%s has been saved to %s"
 HINTS = {"category": "transfer.complete"}
 
-def open_notification(title, location):
-    """Opens a download complete notification from Firefox"""
-    global FILENAME
-    FILENAME = location
-    if call(["xdg-open", "--version"]) == 0:
-        actions = ACTIONS
+
+class GalagoNotRunningException(Exception):
+
+    """
+    Could not find galago server or Galago server did not behave as expected
+    """
+
+    pass
+
+
+if not pynotify.init("FirefoxNotify"):
+    raise GalagoNotRunningException
+
+
+try:
+    import xdg.IconTheme
+except ImportError:
+    APPICON = "firefox"
+else:
+    if xdg.IconTheme.getIconPath('firefox-3.0') is not None:
+        APPICON = 'firefox-3.0'
     else:
-        actions = None
-    notif = dbusnotify.GalagoNotification(SUMMARY,
-                body=BODY % title,
-                appname=APPNAME,
-                appicon=APPICON,
-                actions=actions,
-                hints=HINTS,
-                )
-    notif.send()
+        APPICON = 'firefox'
+
+
+class FirefoxNotification(object):
+
+    """
+    Notification for a download complete from Firefox, essentially a wrapper
+    around pynotify
+    """
+
+    def __init__(self, title, location):
+        """Creates a Notification for Firefox"""
+        self.title = title
+        self.location = location
+
+    def show(self):
+        """Displays a notification for firefox.
+
+        Adds actions open and opendir if available
+        
+        """
+        notif = pynotify.Notification(SUMMARY,
+                                      BODY % (self.title, self.location),
+                                      APPICON,
+                                      )
+        caps = pynotify.get_server_caps()
+        if caps is None:
+            raise GalagoNotRunningException
+        if 'actions' in caps and caps['actions']:
+            notif.add_action("open", "Open", self.open_file)
+            notif.add_action("opendir", "Open Directory", self.open_directory)
+
+        if not notif.show():
+            raise GalagoNotRunningException("Could not display notification")
+        if 'actions' in caps and caps['actions']:
+            gtk.main()
+
+    def open_file(self):
+        """Opens the file for the file given in the global FILENAME"""
+        Popen([OPEN_COMMAND, self.location])
+        gtk.main_quit()
+
+    def open_directory(self):
+        """Opens the directory for the file given in the global FILENAME"""
+        Popen([OPEN_COMMAND, os.path.dirname(self.location)])
+        gtk.main_quit()
+
 
 def main():
     """Opens a notification in firefox
@@ -52,7 +96,9 @@ def main():
     if len(sys.argv) != 3:
         print >> sys.stderr, "Invalid number of arguments called"
         sys.exit(1)
-    open_notification(sys.argv[1], sys.argv[2])
+    notify = FirefoxNotification(sys.argv[1], sys.argv[2])
+    notify.show()
+
 
 if __name__ == '__main__':
     main()
