@@ -8,11 +8,14 @@ A quick extension based on mumbles project's FirefoxDbus to send notifications
 on the galago notifications interface.
 
 Requirements:
- * Python
- * DBus
- * python module pynotify (debian package pynotify)
+
+* Python
+* DBus
+* python module pynotify (debian package python-notify)
+
 Optional:
- * xdg-open (from xdg-utils)
+
+* xdg-open (from xdg-utils)
 
 Installation
 ------------
