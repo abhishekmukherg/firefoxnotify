@@ -97,28 +97,29 @@ class FirefoxNotification(object):
                                       )
         self.notif.connect('closed', self._cleanup)
         self.notif.set_hint_string("category", "transfer.complete")
+        self.notif.set_hint_string("x-canonical-append", "allowed")
 
-        caps = pynotify.get_server_caps()
-        if caps is None:
-            raise GalagoNotRunningException
-        try:
-            call([OPEN_COMMAND, '--version'])
-        except:
-            xdg_exists = False
+        if 'actions' in caps and caps['actions']:
+            try:
+                call([OPEN_COMMAND, '--version'])
+            except OSError:
+                LOG.warn(_("xdg-open was not found"))
+                xdg_exists = False
+            else:
+                xdg_exists = True
+                self.notif.add_action("open",
+                                    _("Open"),
+                                    self.open_file)
+                self.notif.add_action("opendir",
+                                    _("Open Directory"),
+                                    self.open_directory)
         else:
-            xdg_exists = True
-        if 'actions' in caps and xdg_exists:
-            self.notif.add_action("open",
-                                _("Open"),
-                                self.open_file)
-            self.notif.add_action("opendir",
-                                _("Open Directory"),
-                                self.open_directory)
+            xdg_exists = False
 
         LOG.info(_("Displaying notification"))
         if not self.notif.show():
             raise GalagoNotRunningException(_("Could not display notification"))
-        if 'actions' in caps:
+        if xdg_exists:
             gtk.main()
 
     def _cleanup(self, notif=None, reason=None):
