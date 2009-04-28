@@ -34,9 +34,8 @@ except ImportError:
 
 
 OPEN_COMMAND = "xdg-open"
-SUMMARY = _("Firefox Download Complete")
-BODY = _("%s has been saved to %s")
-HINTS = {"category": "transfer.complete"}
+SUMMARY = _("Download Complete")
+BODY = _("%(title)s Downloaded")
 
 
 logging.basicConfig()
@@ -86,8 +85,14 @@ class FirefoxNotification(object):
         Adds actions open and opendir if available
         
         """
+        caps = pynotify.get_server_caps()
+        if caps is None:
+            raise GalagoNotRunningException
+
+        body = BODY % {'title': self.title,
+                       'location': self.location}
         self.notif = pynotify.Notification(SUMMARY,
-                                      BODY % (self.title, self.location),
+                                      body,
                                       APPICON,
                                       )
         self.notif.connect('closed', self._cleanup)
