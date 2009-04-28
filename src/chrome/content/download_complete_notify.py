@@ -97,6 +97,8 @@ class FirefoxNotification(object):
                                       )
         self.notif.connect('closed', self._cleanup)
         self.notif.set_hint_string("category", "transfer.complete")
+        # Note: This won't work until we get the pynotify instance to be
+        # static through calls
         self.notif.set_hint_string("x-canonical-append", "allowed")
 
         if 'actions' in caps and caps['actions']:
