@@ -35,7 +35,7 @@ except ImportError:
 
 OPEN_COMMAND = "xdg-open"
 SUMMARY = _("Download Complete")
-BODY = _("%(title)s Downloaded")
+BODY = _(' - "%(title)s"')
 
 
 logging.basicConfig()
