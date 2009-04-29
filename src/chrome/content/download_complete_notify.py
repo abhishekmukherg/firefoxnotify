@@ -101,7 +101,7 @@ class FirefoxNotification(object):
         # static through calls
         self.notif.set_hint_string("x-canonical-append", "allowed")
 
-        if 'actions' in caps and caps['actions']:
+        if 'actions' in caps:
             try:
                 call([OPEN_COMMAND, '--version'])
             except OSError:
