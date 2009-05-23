@@ -26,6 +26,11 @@ var download_complete_notify = {
                            .getService(Components.interfaces.nsIDownloadManager);
               
     this.dlMgr.addListener(download_complete_notify);
+
+    // disable native firefox download notifications
+    var prefs = Components.classes["@mozilla.org/preferences-service;1"]
+                    .getService(Components.interfaces.nsIPrefService);
+    prefs.setBoolPref("browser.download.manager.showAlertOnComplete",false);
   },
   
   notify: function(aDownload) {
