@@ -5,7 +5,7 @@ package: logo
 logo: src/chrome/content/logo.png
 
 src/chrome/content/logo.png: logo.svg
-	rsvg-convert logo.svg -o src/chrome/content/logo.png --width=128 --keep-aspect-ratio --format=png
+	rsvg-convert logo.svg -o src/chrome/content/logo.png --width=32 --keep-aspect-ratio --format=png
 
 .PHONY: package clean
 clean:
