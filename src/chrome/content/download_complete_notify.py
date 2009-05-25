@@ -29,8 +29,9 @@ from subprocess import Popen, call
 
 try:
     import gettext
-    gettext.install('firefoxnotify', os.path.join(*([os.path.dirname(__file__)]
-                                                    + [os.pardir]*2)))
+    path = os.path.join(*([os.path.dirname(__file__)] + [os.pardir]*2 + ['po']))
+    path = os.path.abspath(path)
+    gettext.install('firefoxnotify', path)
 except ImportError:
     _ = lambda x: unicode(x)
 
