@@ -55,15 +55,18 @@ if not pynotify.init("FirefoxNotify"):
     raise GalagoNotRunningException
 
 
-try:
-    import xdg.IconTheme
-except ImportError:
-    APPICON = "firefox"
-else:
-    if xdg.IconTheme.getIconPath('firefox-3.0') is not None:
-        APPICON = 'firefox-3.0'
+POSSIBLE_ICON_NAMES = ('firefox', 'firefox-3.0', 'firefox-icon')
+
+def get_icon():
+    try:
+        import xdg.IconTheme
+    except ImportError:
+        return POSSIBLE_ICON_NAMES[0]
     else:
-        APPICON = 'firefox'
+        for name in POSSIBLE_ICON_NAMES:
+            if xdg.IconTheme.getIconPath(name) is not None:
+                return name
+        return POSSIBLE_ICON_NAMES[0]
 
 
 class FirefoxNotification(object):
@@ -93,7 +96,7 @@ class FirefoxNotification(object):
                        'location': self.location}
         self.notif = pynotify.Notification(SUMMARY,
                                       body,
-                                      APPICON,
+                                      get_icon(),
                                       )
         self.notif.connect('closed', self._cleanup)
         self.notif.set_hint_string("category", "transfer.complete")
