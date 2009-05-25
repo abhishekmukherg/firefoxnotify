@@ -4,8 +4,11 @@
     <em:id>firefoxnotify@abhishek.mukherjee</em:id>
     <em:name>FirefoxNotify</em:name>
     <em:version>1.5.4</em:version>
+    <em:type>2</em:type>
     <em:creator>Abhishek Mukherjee</em:creator>
+    <em:homepageURL>http://github.com/linkinpark342/firefoxnotify</em:homepageURL>
     <em:description>Send Dbus Notification on Firefox Events</em:description>
+    <em:contributer>Eugene Gorodinsky</em:contributer>
     <em:iconURL>chrome://dbusnotify/content/logo.png</em:iconURL>
     <em:targetApplication>
       <Description>
