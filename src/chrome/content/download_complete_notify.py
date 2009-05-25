@@ -139,15 +139,17 @@ class FirefoxNotification(object):
         """Opens the file for the file given in self.location"""
         assert notif is None or notif == self.notif
         LOG.info(_("Opening file %s") % unicode(self.location))
-        Popen([OPEN_COMMAND, self.location])
+        if self.location:
+            Popen([OPEN_COMMAND, self.location])
         self._cleanup()
 
     def open_directory(self, notif=None, action_key=None):
         """Opens the directory for the file given in self.location"""
         assert notif is None or notif == self.notif
-        dir = os.path.dirname(self.location)
-        LOG.info(_("Opening dir %s") % unicode(dir))
-        Popen([OPEN_COMMAND, dir])
+        dir = os.path.abspath(os.path.dirname(self.location))
+        LOG.info(_("Opening dir %s") % repr(dir))
+        if dir:
+            Popen([OPEN_COMMAND, dir])
         self._cleanup()
 
 
