@@ -3,7 +3,7 @@
   <Description about="urn:mozilla:install-manifest">
     <em:id>firefoxnotify@abhishek.mukherjee</em:id>
     <em:name>FirefoxNotify</em:name>
-    <em:version>1.5.3</em:version>
+    <em:version>1.5.4</em:version>
     <em:creator>Abhishek Mukherjee</em:creator>
     <em:description>Send Dbus Notification on Firefox Events</em:description>
     <em:iconURL>chrome://dbusnotify/content/logo.png</em:iconURL>
@@ -15,5 +15,6 @@
       </Description>
     </em:targetApplication>
     <em:targetPlatform>Linux</em:targetPlatform>
+    <em:targetPlatform>SunOS</em:targetPlatform>
   </Description>
 </RDF>
