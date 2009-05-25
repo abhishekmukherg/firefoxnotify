@@ -1,0 +1,64 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-05-22 23:34-0400\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=en\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../chrome/content/download_complete_notify.py:39
+msgid "Download holy balls Complete"
+msgstr ""
+
+#: ../chrome/content/download_complete_notify.py:40
+#, python-format
+msgid "%(title)s"
+msgstr ""
+
+#: ../chrome/content/download_complete_notify.py:110
+msgid "xdg-open was not found"
+msgstr ""
+
+#: ../chrome/content/download_complete_notify.py:115
+msgid "Open"
+msgstr ""
+
+#: ../chrome/content/download_complete_notify.py:118
+msgid "Open Directory"
+msgstr ""
+
+#: ../chrome/content/download_complete_notify.py:123
+msgid "Displaying notification"
+msgstr ""
+
+#: ../chrome/content/download_complete_notify.py:125
+msgid "Could not display notification"
+msgstr ""
+
+#: ../chrome/content/download_complete_notify.py:134
+msgid "Closing"
+msgstr ""
+
+#: ../chrome/content/download_complete_notify.py:140
+#, python-format
+msgid "Opening file %s"
+msgstr ""
+
+#: ../chrome/content/download_complete_notify.py:148
+#, python-format
+msgid "Opening dir %s"
+msgstr ""
+
+#: ../chrome/content/download_complete_notify.py:160
+msgid "Invalid number of arguments called"
+msgstr ""

@@ -28,7 +28,9 @@ import logging
 from subprocess import Popen, call
 
 try:
-    from gettext import gettext as _
+    import gettext
+    gettext.install('firefoxnotify', os.path.join(*([os.path.dirname(__file__)]
+                                                    + [os.pardir]*2)))
 except ImportError:
     _ = lambda x: unicode(x)
 
@@ -38,7 +40,7 @@ SUMMARY = _("Download Complete")
 BODY = _('%(title)s')
 
 
-logging.basicConfig()
+logging.basicConfig(level=logging.DEBUG)
 LOG = logging.getLogger(__name__)
 
 
