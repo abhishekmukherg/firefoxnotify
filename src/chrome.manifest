@@ -1,3 +1,0 @@
-content	dbusnotify	chrome/content/
-locale	dbusnotify	en-US	chrome/locale/en-US/
-overlay	chrome://browser/content/browser.xul	chrome://dbusnotify/content/ff-overlay.xul
