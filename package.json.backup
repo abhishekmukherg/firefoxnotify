@@ -1,0 +1,6 @@
+{
+  "fullName": "FirefoxNotify",
+  "dependencies": [ "jetpack-core" ], 
+  "description": "Libnotify popup replacements for Firefox",
+  "author": "Abhishek Mukherjee <abhishek.mukher.g@gmail.com>"
+}
