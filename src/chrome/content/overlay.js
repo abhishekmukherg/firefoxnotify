@@ -3,12 +3,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
@@ -21,10 +21,10 @@ var download_complete_notify = {
     // initialization code
     this.initialized = true;
     this.strings = document.getElementById("download_complete_notify-strings");
-    
+
     this.dlMgr = Components.classes["@mozilla.org/download-manager;1"]
                            .getService(Components.interfaces.nsIDownloadManager);
-              
+
     this.dlMgr.addListener(download_complete_notify);
 
     // disable native firefox download notifications
@@ -32,7 +32,7 @@ var download_complete_notify = {
                     .getService(Components.interfaces.nsIPrefService);
     prefs.setBoolPref("browser.download.manager.showAlertOnComplete",false);
   },
-  
+
   notify: function(aDownload) {
 
         var exec = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsILocalFile);
@@ -66,15 +66,15 @@ var download_complete_notify = {
         return;
     }
   },
-  
+
   onDownloadStateChange: function(aState, aDownload) {
-    
+
     switch(aDownload.state) {
       case Components.interfaces.nsIDownloadManager.DOWNLOAD_DOWNLOADING:
       case Components.interfaces.nsIDownloadManager.DOWNLOAD_FAILED:
       case Components.interfaces.nsIDownloadManager.DOWNLOAD_CANCELED:
         break;
-        
+
       case Components.interfaces.nsIDownloadManager.DOWNLOAD_FINISHED:
         this.notify(aDownload);
         break;
